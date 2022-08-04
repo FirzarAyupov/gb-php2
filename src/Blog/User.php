@@ -7,22 +7,20 @@ class User
     private int $id;
     private string $username;
     private string $login;
+    private string $firsName;
+    private string $lastName;
 
     /**
      * @param int $id
      * @param string $username
      * @param string $login
      */
-    public function __construct(int $id, string $username, string $login)
+    public function __construct(string $firstName, string $lastName, string $login)
     {
-        $this->id = $id;
-        $this->username = $username;
+        $this->id = 0;        
+        $this->lastName = $lastName;
+        $this->firstName = $firstName;
         $this->login = $login;
-    }
-
-    public function __toString(): string
-    {
-        return "Юзер $this->id с именем $this->username и логином $this->login." . PHP_EOL;
     }
 
     /**
@@ -44,22 +42,6 @@ class User
     /**
      * @return string
      */
-    public function getUsername(): string
-    {
-        return $this->username;
-    }
-
-    /**
-     * @param string $username
-     */
-    public function setUsername(string $username): void
-    {
-        $this->username = $username;
-    }
-
-    /**
-     * @return string
-     */
     public function getLogin(): string
     {
         return $this->login;
@@ -71,6 +53,11 @@ class User
     public function setLogin(string $login): void
     {
         $this->login = $login;
+    }
+
+    public function __toString()
+    {
+        return $this->firstName . ' ' . $this->lastName;
     }
 
 
