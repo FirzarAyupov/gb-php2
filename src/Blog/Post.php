@@ -2,23 +2,50 @@
 
 namespace GeekBrains\LevelTwo\Blog;
 
+use GeekBrains\LevelTwo\Blog\UUID;
+
 class Post
 {
-    private ?int $id;
-    private ?int $user_id;
-    private string $text;
-
     public function __construct(
-        int $user_id = null,
-        string $text
+        private UUID $uuid,
+        private User $author,
+        private string $title,
+        private string $text
     )
     {
-        $this->text = $text;
-        $this->$user_id = $user_id;
+    }
+
+    /**
+     * @return User
+     */
+    public function author(): User
+    {
+        return $this->author;
+    }
+
+    /**
+     * @return string
+     */
+    public function title(): string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @return string
+     */
+    public function text(): string
+    {
+        return $this->text;
+    }
+
+    public function uuid(): UUID
+    {
+        return $this->uuid;
     }
 
     public function __toString()
     {
-        return $this->text;
+        return $this->title() . ' ' . $this->text();
     }
 }

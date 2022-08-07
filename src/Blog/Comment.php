@@ -2,26 +2,50 @@
 
 namespace GeekBrains\LevelTwo\Blog;
 
+use GeekBrains\LevelTwo\Blog\UUID;
+
 class Comment
 {
-    private int $id;
-    private ?int $user_id;
-    private ?int $post_id;
-    private string $text;
-
     public function __construct(
-        int $user_id = null,
-        int $post_id = null,
-        string $text
+        private UUID $uuid,
+        private Post $post,
+        private User $author,
+        private string $text
     )
     {
-        $this->text = $text;
-        $this->$user_id = $user_id;
-        $this->$post_id = $post_id;
+    }
+
+    /**
+     * @return Post
+     */
+    public function post(): Post
+    {
+        return $this->post;
+    }
+
+    /**
+     * @return User
+     */
+    public function author(): User
+    {
+        return $this->author;
+    }
+
+    /**
+     * @return string
+     */
+    public function text(): string
+    {
+        return $this->text;
+    }
+
+    public function uuid(): UUID
+    {
+        return $this->uuid;
     }
 
     public function __toString()
     {
-        return $this->text;
+        return $this->author . ' пишет: ' . $this->text;
     }
 }

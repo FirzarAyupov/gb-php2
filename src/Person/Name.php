@@ -19,4 +19,22 @@ class Name
     {
         return $this->firstName . ' ' . $this->lastName;
     }
+
+    /**
+     * @return string
+     */
+    public function first(): string
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @return string
+     */
+    public function last(): string
+    {
+        return $this->lastName;
+    }
+
+
 }

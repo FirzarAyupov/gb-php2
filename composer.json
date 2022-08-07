@@ -1,5 +1,5 @@
 {
-    "name": "gb/firzar",
+    "name": "ember/abc",
     "autoload": {
         "psr-4": {
             "GeekBrains\\LevelTwo\\": "src/"
@@ -7,12 +7,14 @@
     },
     "authors": [
         {
-            "name": "Firzar",
-            "email": "a.firzar@gmail.com"
+            "name": "Ember",
+            "email": "evebay@mail.ru"
         }
     ],
     "require": {
         "fakerphp/faker": "^1.20",
-        "roave/security-advisories": "dev-latest"
+        "roave/security-advisories": "dev-latest",
+        "ext-pdo": "*",
+        "symfony/polyfill-uuid": "^1.26"
     }
 }

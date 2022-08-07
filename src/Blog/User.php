@@ -2,63 +2,47 @@
 
 namespace GeekBrains\LevelTwo\Blog;
 
+use GeekBrains\LevelTwo\Person\Name;
+use GeekBrains\LevelTwo\Blog\UUID;
+
 class User
 {
-    private int $id;
-    private string $username;
-    private string $login;
-    private string $firsName;
-    private string $lastName;
+
+    public function __construct(
+        private UUID $uuid,
+        private string $username,
+        private Name $name
+    )
+    {
+    }
+
+    public function username(): string
+    {
+        return $this->username;
+    }
+
+    public function __toString(): string
+    {
+        $firstName = $this->name()->first();
+        $lastName = $this->name()->last();
+        return "Пользователь $firstName $lastName" . PHP_EOL;
+    }
+
+    public function uuid(): UUID
+    {
+        return $this->uuid;
+    }
+
 
     /**
-     * @param int $id
-     * @param string $username
-     * @param string $login
+     * @return Name
      */
-    public function __construct(string $firstName, string $lastName, string $login)
+    public function name(): Name
     {
-        $this->id = 0;        
-        $this->lastName = $lastName;
-        $this->firstName = $firstName;
-        $this->login = $login;
+        return $this->name;
     }
 
-    /**
-     * @return int
-     */
-    public function id(): int
-    {
-        return $this->id;
-    }
 
-    /**
-     * @param int $id
-     */
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLogin(): string
-    {
-        return $this->login;
-    }
-
-    /**
-     * @param string $login
-     */
-    public function setLogin(string $login): void
-    {
-        $this->login = $login;
-    }
-
-    public function __toString()
-    {
-        return $this->firstName . ' ' . $this->lastName;
-    }
 
 
 }
