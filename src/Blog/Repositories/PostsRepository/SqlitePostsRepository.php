@@ -79,7 +79,6 @@ VALUES (:uuid, :author_uuid, :title, :text)'
         return new Post(
             new UUID($result['uuid']),
             $author,
-            $result['username'],
             $result['title'],
             $result['text'],
         );
