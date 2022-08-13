@@ -1,13 +1,14 @@
 <?php
 
-namespace GeekBrains\LevelTwo\Blog\Repositories\CommentsRepository;
+namespace GeekBrains\Blog\Repositories\CommentsRepository;
 
-use GeekBrains\LevelTwo\Blog\Comment;
-use GeekBrains\LevelTwo\Blog\Exceptions\InvalidArgumentException;
-use GeekBrains\LevelTwo\Blog\Exceptions\CommentNotFoundException;
-use GeekBrains\LevelTwo\Blog\Repositories\PostsRepository\SqlitePostsRepository;
-use GeekBrains\LevelTwo\Blog\Repositories\UsersRepository\SqliteUsersRepository;
-use GeekBrains\LevelTwo\Blog\UUID;
+use GeekBrains\Blog\Comment;
+use GeekBrains\Blog\Exceptions\InvalidArgumentException;
+use GeekBrains\Blog\Exceptions\CommentNotFoundException;
+use GeekBrains\Blog\Repositories\Interfaces\CommentsRepositoryInterface;
+use GeekBrains\Blog\Repositories\PostsRepository\SqlitePostsRepository;
+use GeekBrains\Blog\Repositories\UsersRepository\SqliteUsersRepository;
+use GeekBrains\Blog\UUID;
 
 class SqliteCommentsRepository implements CommentsRepositoryInterface
 {
@@ -33,7 +34,7 @@ class SqliteCommentsRepository implements CommentsRepositoryInterface
 
         if ($result === false) {
             throw new CommentNotFoundException(
-                "Cannot get comments: $uuid"
+                "Cannot get comment: $uuid"
             );
         }
 
@@ -50,8 +51,8 @@ VALUES (:uuid, :post_uuid, :author_uuid, :text)'
 
         $statement->execute([
             ':uuid' => (string)$comment->uuid(),
-            ':post_uuid' => $comment->author()->uuid(),
-            ':author_uuid' => $comment->author()->uuid(),
+            ':post_uuid' => (string)$comment->post()->uuid(),
+            ':author_uuid' => (string)$comment->author()->uuid(),
             ':text' => $comment->text(),
         ]);
     }
@@ -60,6 +61,7 @@ VALUES (:uuid, :post_uuid, :author_uuid, :text)'
     /**
      * @throws CommentNotFoundException
      * @throws InvalidArgumentException
+     * @throws \GeekBrains\Blog\Exceptions\UserNotFoundException
      */
     private function getComment(\PDOStatement $statement, string $uuid): Comment
     {
@@ -71,15 +73,13 @@ VALUES (:uuid, :post_uuid, :author_uuid, :text)'
         }
 
         $usersRepo = new SqliteUsersRepository($this->connection);
-        $author = $usersRepo->get($result('author_uuid'));
 
         $postsRepo = new SqlitePostsRepository($this->connection);
-        $post = $postsRepo->get($result('post_uuid'));
 
         return new Comment(
             new UUID($result['uuid']),
-            $post,
-            $author,
+            $postsRepo->get($result['post_uuid']),
+            $usersRepo->get($result['author_uuid']),
             $result['text'],
         );
     }

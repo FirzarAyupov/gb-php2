@@ -1,6 +1,6 @@
 <?php
 
-namespace GeekBrains\LevelTwo\Blog\Exceptions;
+namespace GeekBrains\Blog\Exceptions;
 
 class InvalidArgumentException extends \Exception
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace GeekBrains\LevelTwo\Blog;
+namespace GeekBrains\Blog;
 
-use GeekBrains\LevelTwo\Blog\UUID;
+use GeekBrains\Blog\UUID;
 
 class Comment
 {

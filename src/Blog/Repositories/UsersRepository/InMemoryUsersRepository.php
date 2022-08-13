@@ -1,10 +1,10 @@
 <?php
 
-namespace GeekBrains\LevelTwo\Blog\Repositories\UsersRepository;
+namespace GeekBrains\Blog\Repositories\UsersRepository;
 
-use GeekBrains\LevelTwo\Blog\Exceptions\UserNotFoundException;
-use GeekBrains\LevelTwo\Blog\User;
-use GeekBrains\LevelTwo\Blog\UUID;
+use GeekBrains\Blog\Exceptions\UserNotFoundException;
+use GeekBrains\Blog\User;
+use GeekBrains\Blog\UUID;
 
 class InMemoryUsersRepository implements UsersRepositoryInterface
 {

@@ -1,13 +1,15 @@
 <?php
 
-namespace GeekBrains\LevelTwo\Blog\Repositories\PostsRepository;
+namespace GeekBrains\Blog\Repositories\PostsRepository;
 
-use GeekBrains\LevelTwo\Blog\Exceptions\InvalidArgumentException;
-use GeekBrains\LevelTwo\Blog\Exceptions\CommentNotFoundException;
-use GeekBrains\LevelTwo\Blog\Post;
-use GeekBrains\LevelTwo\Blog\Repositories\UsersRepository\SqliteUsersRepository;
-use GeekBrains\LevelTwo\Blog\UUID;
-use \GeekBrains\LevelTwo\Blog\Exceptions\UserNotFoundException;
+use GeekBrains\Blog\Exceptions\InvalidArgumentException;
+use GeekBrains\Blog\Exceptions\CommentNotFoundException;
+use GeekBrains\Blog\Exceptions\PostNotFoundException;
+use GeekBrains\Blog\Post;
+use GeekBrains\Blog\Repositories\Interfaces\PostsRepositoryInterface;
+use GeekBrains\Blog\Repositories\UsersRepository\SqliteUsersRepository;
+use GeekBrains\Blog\UUID;
+use \GeekBrains\Blog\Exceptions\UserNotFoundException;
 
 class SqlitePostsRepository implements PostsRepositoryInterface
 {
@@ -32,7 +34,7 @@ class SqlitePostsRepository implements PostsRepositoryInterface
         $result = $statement->fetch(\PDO::FETCH_ASSOC);
 // Бросаем исключение, если пост не найден
         if ($result === false) {
-            throw new CommentNotFoundException(
+            throw new PostNotFoundException(
                 "Cannot get post: $uuid"
             );
         }

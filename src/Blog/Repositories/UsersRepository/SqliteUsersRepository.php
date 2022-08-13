@@ -1,12 +1,13 @@
 <?php
 
-namespace GeekBrains\LevelTwo\Blog\Repositories\UsersRepository;
+namespace GeekBrains\Blog\Repositories\UsersRepository;
 
-use GeekBrains\LevelTwo\Blog\Exceptions\InvalidArgumentException;
-use GeekBrains\LevelTwo\Blog\Exceptions\UserNotFoundException;
-use GeekBrains\LevelTwo\Blog\User;
-use GeekBrains\LevelTwo\Blog\UUID;
-use GeekBrains\LevelTwo\Person\Name;
+use GeekBrains\Blog\Exceptions\InvalidArgumentException;
+use GeekBrains\Blog\Exceptions\UserNotFoundException;
+use GeekBrains\Blog\Repositories\Interfaces\UsersRepositoryInterface;
+use GeekBrains\Blog\User;
+use GeekBrains\Blog\UUID;
+use GeekBrains\Person\Name;
 
 class SqliteUsersRepository implements UsersRepositoryInterface
 {

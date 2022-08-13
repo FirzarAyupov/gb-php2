@@ -1,14 +1,14 @@
 <?php
 
-namespace GeekBrains\LevelTwo\Blog\Commands;
+namespace GeekBrains\Blog\Commands;
 
-use GeekBrains\LevelTwo\Blog\Exceptions\ArgumentsException;
-use GeekBrains\LevelTwo\Blog\Exceptions\CommandException;
-use GeekBrains\LevelTwo\Blog\Exceptions\UserNotFoundException;
-use GeekBrains\LevelTwo\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
-use GeekBrains\LevelTwo\Blog\User;
-use GeekBrains\LevelTwo\Blog\UUID;
-use GeekBrains\LevelTwo\Person\Name;
+use GeekBrains\Blog\Exceptions\ArgumentsException;
+use GeekBrains\Blog\Exceptions\CommandException;
+use GeekBrains\Blog\Exceptions\UserNotFoundException;
+use GeekBrains\Blog\Repositories\Interfaces\UsersRepositoryInterface;
+use GeekBrains\Blog\User;
+use GeekBrains\Blog\UUID;
+use GeekBrains\Person\Name;
 
 class CreateUserCommand
 {

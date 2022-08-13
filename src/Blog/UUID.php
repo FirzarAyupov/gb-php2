@@ -1,8 +1,8 @@
 <?php
 
-namespace GeekBrains\LevelTwo\Blog;
+namespace GeekBrains\Blog;
 
-use GeekBrains\LevelTwo\Blog\Exceptions\InvalidArgumentException;
+use GeekBrains\Blog\Exceptions\InvalidArgumentException;
 
 class UUID
 {

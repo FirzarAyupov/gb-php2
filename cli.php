@@ -1,9 +1,9 @@
 <?php
 
-use GeekBrains\LevelTwo\Blog\Commands\Arguments;
-use GeekBrains\LevelTwo\Blog\Commands\CreateUserCommand;
-use GeekBrains\LevelTwo\Blog\Repositories\PostsRepository\SqlitePostsRepository;
-use GeekBrains\LevelTwo\Blog\Repositories\UsersRepository\SqliteUsersRepository;
+use GeekBrains\Blog\Commands\Arguments;
+use GeekBrains\Blog\Commands\CreateUserCommand;
+use GeekBrains\Blog\Repositories\PostsRepository\SqlitePostsRepository;
+use GeekBrains\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 
 require_once __DIR__ . '/vendor/autoload.php';
 

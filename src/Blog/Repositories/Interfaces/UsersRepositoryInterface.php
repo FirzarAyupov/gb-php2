@@ -1,9 +1,9 @@
 <?php
 
-namespace GeekBrains\LevelTwo\Blog\Repositories\UsersRepository;
+namespace GeekBrains\Blog\Repositories\Interfaces;
 
-use GeekBrains\LevelTwo\Blog\User;
-use GeekBrains\LevelTwo\Blog\UUID;
+use GeekBrains\Blog\User;
+use GeekBrains\Blog\UUID;
 
 interface UsersRepositoryInterface
 {
