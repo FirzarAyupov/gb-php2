@@ -37,7 +37,7 @@ class SqliteUsersRepository implements UsersRepositoryInterface
             );
         }
 
-        return $this->getUser($statement, $uuid);
+        return $this->getUser($result);
     }
 
 
@@ -71,26 +71,27 @@ VALUES (:first_name, :last_name, :uuid, :username)'
         $statement->execute([
             ':username' => $username,
         ]);
-        return $this->getUser($statement, $username);
-    }
-
-    /**
-     * @throws UserNotFoundException
-     * @throws InvalidArgumentException
-     */
-    private function getUser(\PDOStatement $statement, string $username): User
-    {
         $result = $statement->fetch(\PDO::FETCH_ASSOC);
         if ($result === false) {
             throw new UserNotFoundException(
                 "Cannot find user: $username"
             );
         }
+        return $this->getUser($result);
+    }
+
+    /**
+     * @throws UserNotFoundException
+     * @throws InvalidArgumentException
+     */
+    private function getUser(array $userArray): User
+    {
+
 // Создаём объект пользователя с полем username
         return new User(
-            new UUID($result['uuid']),
-            $result['username'],
-            new Name($result['first_name'], $result['last_name'])
+            new UUID($userArray['uuid']),
+            $userArray['username'],
+            new Name($userArray['first_name'], $userArray['last_name'])
         );
     }
 }

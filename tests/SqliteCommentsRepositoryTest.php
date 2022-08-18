@@ -72,29 +72,38 @@ class SqliteCommentsRepositoryTest extends TestCase
         );
     }
 
+    /**
+     * @throws CommentNotFoundException
+     * @throws \GeekBrains\Blog\Exceptions\InvalidArgumentException
+     */
     public function testItGetCommentFromDatabase(): void
     {
         $connectionStub = $this->createStub(PDO::class);
-        $statementMock = $this->createMock(PDOStatement::class);
-        $statementMock
+        $statementStub = $this->createStub(PDOStatement::class);
+        $statementStub
             ->method('fetch')
-            ->willReturn(['a7db6205-c14b-4b56-8eaf-233593883ab1',
-                    'cfa10b64-1b24-11ed-861d-0242ac120002',
-                    '13cc094e-1475-413a-890c-218ad601538c',
-                    'Комментарий к статье',
+            ->willReturn([
+                'uuid' => 'a7db6205-c14b-4b56-8eaf-233593883ab1',
+                'author_uuid' => new UUID('cfa10b64-1b24-11ed-861d-0242ac120002'),
+                'post_uuid' => new UUID('13cc094e-1475-413a-890c-218ad601538c'),
+                'text' => 'Комментарий к статье',
                 ]);
 
-        $connectionStub->method('prepare')->willReturn($statementMock);
+        $connectionStub->method('prepare')->willReturn($statementStub);
+
         $repository = new SqliteCommentsRepository($connectionStub);
 
-        $this->assertSame(['a7db6205-c14b-4b56-8eaf-233593883ab1',
-            'cfa10b64-1b24-11ed-861d-0242ac120002',
-            '13cc094e-1475-413a-890c-218ad601538c',
-            'Комментарий к статье',
-        ],
-            $repository->get(
-                new UUID('a7db6205-c14b-4b56-8eaf-233593883ab1'),
-            ));
+        $expected = [
+            'uuid' => 'a7db6205-c14b-4b56-8eaf-233593883ab1',
+            'author_uuid' => new UUID('cfa10b64-1b24-11ed-861d-0242ac120002'),
+            'post_uuid' => new UUID('13cc094e-1475-413a-890c-218ad601538c'),
+            'text' => 'Комментарий к статье',
+        ];
+        $actual = $repository->get(
+            new UUID('a7db6205-c14b-4b56-8eaf-233593883ab1'),
+        );
+
+        $this->assertSame($expected, $actual);
 
 
     }

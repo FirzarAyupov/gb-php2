@@ -30,13 +30,6 @@ class SqliteCommentsRepository implements CommentsRepositoryInterface
         $statement->execute([
             ':uuid' => (string)$uuid,
         ]);
-        $result = $statement->fetch(\PDO::FETCH_ASSOC);
-
-        if ($result === false) {
-            throw new CommentNotFoundException(
-                "Cannot get comment: $uuid"
-            );
-        }
 
         return $this->getComment($statement, $uuid);
     }
@@ -45,7 +38,7 @@ class SqliteCommentsRepository implements CommentsRepositoryInterface
     public function save(Comment $comment): void
     {
         $statement = $this->connection->prepare(
-            'INSERT INTO comment (uuid, post_uuid, author_uuid, text)
+            'INSERT INTO comments (uuid, post_uuid, author_uuid, text)
 VALUES (:uuid, :post_uuid, :author_uuid, :text)'
         );
 
@@ -73,7 +66,6 @@ VALUES (:uuid, :post_uuid, :author_uuid, :text)'
         }
 
         $usersRepo = new SqliteUsersRepository($this->connection);
-
         $postsRepo = new SqlitePostsRepository($this->connection);
 
         return new Comment(

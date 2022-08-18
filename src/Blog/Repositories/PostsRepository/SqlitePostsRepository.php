@@ -10,6 +10,7 @@ use GeekBrains\Blog\Repositories\Interfaces\PostsRepositoryInterface;
 use GeekBrains\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use GeekBrains\Blog\UUID;
 use \GeekBrains\Blog\Exceptions\UserNotFoundException;
+use phpDocumentor\Reflection\Types\Void_;
 
 class SqlitePostsRepository implements PostsRepositoryInterface
 {
@@ -39,7 +40,7 @@ class SqlitePostsRepository implements PostsRepositoryInterface
             );
         }
 
-        return $this->getPost($statement, $uuid);
+        return $this->getPost($result);
     }
 
 
@@ -66,23 +67,27 @@ VALUES (:uuid, :author_uuid, :title, :text)'
      * @throws InvalidArgumentException
      * @throws UserNotFoundException
      */
-    private function getPost(\PDOStatement $statement, string $uuid): Post
+    private function getPost(array $postArray): Post
     {
-        $result = $statement->fetch(\PDO::FETCH_ASSOC);
-        if ($result === false) {
-            throw new CommentNotFoundException(
-                "Cannot find post: $uuid"
-            );
-        }
-
         $userRepo = new SqliteUsersRepository($this->connection);
-        $author = $userRepo->get($result('author_uuid'));
+        $author = $userRepo->get(new UUID($postArray['author_uuid']));
 
         return new Post(
-            new UUID($result['uuid']),
+            new UUID($postArray['uuid']),
             $author,
-            $result['title'],
-            $result['text'],
+            $postArray['title'],
+            $postArray['text'],
         );
+    }
+    public function delPost(UUID $postUuid): void
+    {
+        $statement = $this->connection->prepare(
+            'DELETE FROM posts WHERE uuid = :uuid'
+        );
+
+        $statement->execute([
+            ':uuid' => (string)$postUuid,
+        ]);
+
     }
 }
