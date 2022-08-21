@@ -4,11 +4,17 @@
     "php": "^8.0",
     "ext-pdo": "*",
     "symfony/polyfill-uuid": "^1.26",
-    "ext-mbstring": "*"
+    "ext-mbstring": "*",
+    "psr/container": "^2.0"
   },
   "autoload": {
     "psr-4": {
       "GeekBrains\\": "src/"
+    },
+    "autoload-dev": {
+      "psr-4": {
+        "GeekBrains\\Blog\\UnitTests\\": "tests/"
+      }
     }
   },
   "require-dev": {

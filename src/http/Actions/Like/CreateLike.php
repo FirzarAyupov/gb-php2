@@ -1,10 +1,11 @@
 <?php
-namespace GeekBrains\http\Actions\Comments;
+namespace GeekBrains\http\Actions\Like;
 
-use GeekBrains\Blog\Comment;
 use GeekBrains\Blog\Exceptions\InvalidArgumentException;
+use GeekBrains\Blog\Exceptions\LikeAlreadyCreatedException;
 use GeekBrains\Blog\Exceptions\UserNotFoundException;
-use GeekBrains\Blog\Repositories\Interfaces\CommentsRepositoryInterface;
+use GeekBrains\Blog\Like;
+use GeekBrains\Blog\Repositories\Interfaces\LikeRepositoryInterface;
 use GeekBrains\Blog\Repositories\Interfaces\PostsRepositoryInterface;
 use GeekBrains\Blog\Repositories\Interfaces\UsersRepositoryInterface;
 use GeekBrains\Blog\UUID;
@@ -16,16 +17,18 @@ use GeekBrains\http\Response;
 use GeekBrains\http\ErrorResponse;
 use GeekBrains\http\SuccessfulResponse;
 
-class CreateComment implements ActionInterface
+class CreateLike implements ActionInterface
 {
-// Внедряем репозитории статей и пользователей
     public function __construct(
-        private CommentsRepositoryInterface $commentsRepository,
+        private LikeRepositoryInterface $likeRepository,
         private PostsRepositoryInterface $postsRepository,
         private UsersRepositoryInterface $usersRepository,
     ) {
     }
 
+    /**
+     * @throws LikeAlreadyCreatedException
+     */
     public function handle(Request $request): Response
     {
         try {
@@ -49,22 +52,25 @@ class CreateComment implements ActionInterface
         } catch (PostNotFoundException $e) {
             return new ErrorResponse($e->getMessage());
         }
+        if ($this->likeRepository->checkLikeExist($postUuid, $authorUuid))
+        {
+            return new ErrorResponse("Like for the post $postUuid already been created");
+        }
 
-        $newCommentUuid = UUID::random();
+        $newLikeUuid = UUID::random();
         try {
 
-            $comment = new Comment(
-                $newCommentUuid,
+            $like = new Like(
+                $newLikeUuid,
                 $post,
-                $author,
-                $request->jsonBodyField('text'),
+                $author
             );
         } catch (HttpException $e) {
             return new ErrorResponse($e->getMessage());
 }
-        $this->commentsRepository->save($comment);
+        $this->likeRepository->save($like);
         return new SuccessfulResponse([
-            'uuid' => (string)$newCommentUuid,
+            'uuid' => (string)$newLikeUuid,
         ]);
     }
 }
