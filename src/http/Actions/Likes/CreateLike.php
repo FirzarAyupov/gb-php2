@@ -1,11 +1,10 @@
 <?php
-namespace GeekBrains\http\Actions\Like;
+namespace GeekBrains\http\Actions\Likes;
 
 use GeekBrains\Blog\Exceptions\InvalidArgumentException;
-use GeekBrains\Blog\Exceptions\LikeAlreadyCreatedException;
 use GeekBrains\Blog\Exceptions\UserNotFoundException;
 use GeekBrains\Blog\Like;
-use GeekBrains\Blog\Repositories\Interfaces\LikeRepositoryInterface;
+use GeekBrains\Blog\Repositories\Interfaces\LikesRepositoryInterface;
 use GeekBrains\Blog\Repositories\Interfaces\PostsRepositoryInterface;
 use GeekBrains\Blog\Repositories\Interfaces\UsersRepositoryInterface;
 use GeekBrains\Blog\UUID;
@@ -20,15 +19,12 @@ use GeekBrains\http\SuccessfulResponse;
 class CreateLike implements ActionInterface
 {
     public function __construct(
-        private LikeRepositoryInterface $likeRepository,
+        private LikesRepositoryInterface $likeRepository,
         private PostsRepositoryInterface $postsRepository,
         private UsersRepositoryInterface $usersRepository,
     ) {
     }
 
-    /**
-     * @throws LikeAlreadyCreatedException
-     */
     public function handle(Request $request): Response
     {
         try {

@@ -5,7 +5,7 @@ namespace GeekBrains\Blog\Repositories\Interfaces;
 use GeekBrains\Blog\Like;
 use GeekBrains\Blog\UUID;
 
-interface LikeRepositoryInterface
+interface LikesRepositoryInterface
 {
     public function save(Like $like): void;
     public function get(UUID $uuid): Like;

@@ -3,6 +3,7 @@
 
 namespace GeekBrains\Blog\Container;
 
+use GeekBrains\Blog\Exceptions\NotFoundException;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionException;

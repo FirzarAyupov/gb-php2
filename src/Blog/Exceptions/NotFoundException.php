@@ -1,6 +1,6 @@
 <?php
 
-namespace GeekBrains\Blog\Container;
+namespace GeekBrains\Blog\Exceptions;
 
 use Exception;
 use Psr\Container\NotFoundExceptionInterface;

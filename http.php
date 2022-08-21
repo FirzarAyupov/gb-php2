@@ -4,7 +4,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use GeekBrains\Exceptions\AppException;
 use GeekBrains\http\Actions\Comments\CreateComment;
-use GeekBrains\http\Actions\Like\CreateLike;
+use GeekBrains\http\Actions\Likes\CreateLike;
 use GeekBrains\http\Actions\Posts\CreatePost;
 use GeekBrains\http\Actions\Posts\DeletePost;
 use GeekBrains\http\Actions\Posts\FindByUuid;
