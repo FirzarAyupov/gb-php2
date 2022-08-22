@@ -8,12 +8,16 @@ use GeekBrains\Blog\Repositories\Interfaces\UsersRepositoryInterface;
 use GeekBrains\Blog\User;
 use GeekBrains\Blog\UUID;
 use GeekBrains\Person\Name;
+use Psr\Log\LoggerInterface;
 
 class SqliteUsersRepository implements UsersRepositoryInterface
 {
     private \PDO $connection;
 
-    public function __construct(\PDO $connection) {
+    public function __construct(
+        \PDO $connection,
+        private LoggerInterface $logger)
+    {
         $this->connection = $connection;
     }
 
@@ -32,6 +36,7 @@ class SqliteUsersRepository implements UsersRepositoryInterface
         $result = $statement->fetch(\PDO::FETCH_ASSOC);
 // Бросаем исключение, если пользователь не найден
         if ($result === false) {
+            $this->logger->warning("User already exists: $uuid");
             throw new UserNotFoundException(
                 "Cannot get user: $uuid"
             );
@@ -60,6 +65,7 @@ VALUES (:first_name, :last_name, :uuid, :username)'
             ':uuid' => (string)$user->uuid(),
             ':username' => $user->username(),
         ]);
+        $this->logger->info("User save to DB" . $user->uuid());
     }
 
 

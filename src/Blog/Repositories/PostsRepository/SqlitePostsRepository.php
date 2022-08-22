@@ -11,18 +11,22 @@ use GeekBrains\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use GeekBrains\Blog\UUID;
 use \GeekBrains\Blog\Exceptions\UserNotFoundException;
 use phpDocumentor\Reflection\Types\Void_;
+use Psr\Log\LoggerInterface;
 
 class SqlitePostsRepository implements PostsRepositoryInterface
 {
     private \PDO $connection;
 
-    public function __construct(\PDO $connection) {
+    public function __construct(
+        \PDO $connection,
+        private LoggerInterface $logger) {
         $this->connection = $connection;
     }
 
     /**
      * @throws CommentNotFoundException
      * @throws InvalidArgumentException
+     * @throws PostNotFoundException|UserNotFoundException
      */
     public function get(UUID $uuid): Post
     {
@@ -35,6 +39,7 @@ class SqlitePostsRepository implements PostsRepositoryInterface
         $result = $statement->fetch(\PDO::FETCH_ASSOC);
 // Бросаем исключение, если пост не найден
         if ($result === false) {
+            $this->logger->warning("Comment already exists: $uuid");
             throw new PostNotFoundException(
                 "Cannot get post: $uuid"
             );
@@ -59,6 +64,8 @@ VALUES (:uuid, :author_uuid, :title, :text)'
             ':title' => $post->title(),
             ':text' => $post->text(),
         ]);
+
+        $this->logger->info("Post save to DB: " . $post->uuid());
     }
 
 

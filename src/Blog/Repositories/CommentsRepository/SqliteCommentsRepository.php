@@ -9,12 +9,16 @@ use GeekBrains\Blog\Repositories\Interfaces\CommentsRepositoryInterface;
 use GeekBrains\Blog\Repositories\PostsRepository\SqlitePostsRepository;
 use GeekBrains\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use GeekBrains\Blog\UUID;
+use Psr\Log\LoggerInterface;
 
 class SqliteCommentsRepository implements CommentsRepositoryInterface
 {
     private \PDO $connection;
 
-    public function __construct(\PDO $connection) {
+    public function __construct(
+        \PDO $connection,
+        private LoggerInterface $logger)
+    {
         $this->connection = $connection;
     }
 
@@ -48,6 +52,7 @@ VALUES (:uuid, :post_uuid, :author_uuid, :text)'
             ':author_uuid' => (string)$comment->author()->uuid(),
             ':text' => $comment->text(),
         ]);
+        $this->logger->info("Comment save to DB" . $comment->uuid());
     }
 
 
@@ -60,6 +65,7 @@ VALUES (:uuid, :post_uuid, :author_uuid, :text)'
     {
         $result = $statement->fetch(\PDO::FETCH_ASSOC);
         if ($result === false) {
+            $this->logger->warning("Comment already exists: $uuid");
             throw new CommentNotFoundException(
                 "Cannot find comment: $uuid"
             );

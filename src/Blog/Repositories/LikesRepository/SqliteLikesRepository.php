@@ -12,12 +12,15 @@ use GeekBrains\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use GeekBrains\Blog\UUID;
 use GeekBrains\Blog\Like;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 class SqliteLikesRepository implements LikesRepositoryInterface
 {
     private PDO $connection;
 
-    public function __construct(PDO $connection)
+    public function __construct(
+        \PDO $connection,
+        private LoggerInterface $logger)
     {
         $this->connection = $connection;
     }
@@ -84,6 +87,8 @@ VALUES (:uuid, :post_uuid, :author_uuid)'
             ':post_uuid' => (string)$like->post()->uuid(),
             ':author_uuid' => (string)$like->author()->uuid(),
         ]);
+
+        $this->logger->info("Like save to DB: " . $like->uuid());
     }
 
 
@@ -97,6 +102,7 @@ VALUES (:uuid, :post_uuid, :author_uuid)'
     {
         $like = $statement->fetch(PDO::FETCH_ASSOC);
         if ($like === false) {
+            $this->logger->warning("Like already exists: $uuid");
             throw new LikeNotFoundException(
                 "Cannot find like: $uuid"
             );

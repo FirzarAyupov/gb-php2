@@ -9,6 +9,7 @@ use GeekBrains\Blog\Exceptions\CommandException;
 use GeekBrains\Blog\Exceptions\UserNotFoundException;
 use GeekBrains\Blog\Repositories\Interfaces\UsersRepositoryInterface;
 use GeekBrains\Blog\Repositories\UsersRepository\DummyUsersRepository;
+use GeekBrains\Blog\UnitTests\DummyLogger;
 use GeekBrains\Blog\User;
 use GeekBrains\Blog\UUID;
 use PHPUnit\Framework\TestCase;
@@ -35,10 +36,12 @@ class CreateUserCommandTest extends TestCase
             public function save(User $user): void
             {
             }
+
             public function get(UUID $uuid): User
             {
                 throw new UserNotFoundException("Not found");
             }
+
             public function getByUsername(string $username): User
             {
                 throw new UserNotFoundException("Not found");
@@ -46,20 +49,21 @@ class CreateUserCommandTest extends TestCase
         };
     }
 
-    // Тест проверяет, что команда действительно требует фамилию пользователя
     public function testItRequiresLastName(): void
     {
-// Передаём в конструктор команды объект, возвращаемый нашей функцией
-        $command = new CreateUserCommand($this->makeUsersRepository());
+        $command = new CreateUserCommand(
+            $this->makeUsersRepository(),
+// Тестовая реализация логгера
+            new DummyLogger()
+        );
         $this->expectException(ArgumentsException::class);
         $this->expectExceptionMessage('No such argument: last_name');
         $command->handle(new Arguments([
             'username' => 'Ivan',
-// Нам нужно передать имя пользователя,
-// чтобы дойти до проверки наличия фамилии
             'first_name' => 'Ivan',
         ]));
     }
+
 // Тест проверяет, что команда действительно требует имя пользователя
     public function testItRequiresFirstName(): void
     {

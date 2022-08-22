@@ -13,6 +13,7 @@ use GeekBrains\http\ErrorResponse;
 use GeekBrains\http\Request;
 use GeekBrains\http\Actions\Users\FindByUsername;
 use GeekBrains\Exceptions;
+use Psr\Log\LoggerInterface;
 
 
 // Подключаем файл bootstrap.php
@@ -23,15 +24,20 @@ $request = new Request(
     $_SERVER,
     file_get_contents('php://input'),
 );
+
+$logger = $container->get(LoggerInterface::class);
+
 try {
     $path = $request->path();
-} catch (HttpException) {
+} catch (HttpException $e) {
+    $logger->warning($e->getMessage());
     (new ErrorResponse)->send();
     return;
 }
 try {
     $method = $request->method();
-} catch (HttpException) {
+} catch (HttpException $e) {
+    $logger->warning($e->getMessage());
     (new ErrorResponse)->send();
     return;
 }
@@ -53,11 +59,11 @@ $routes = [
     ],
 ];
 if (!array_key_exists($method, $routes)) {
-    (new ErrorResponse("Route not found: $method $path"))->send();
-    return;
-}
-if (!array_key_exists($path, $routes[$method])) {
-    (new ErrorResponse("Route not found: $method $path"))->send();
+    $message = "Route not found: $method $path";
+    $logger->notice($message);
+    (new ErrorResponse($message))->send();
+
+
     return;
 }
 // Получаем имя класса действия для маршрута
@@ -68,7 +74,8 @@ $action = $container->get($actionClassName);
 
 try {
     $response = $action->handle($request);
-} catch (AppException $e) {
-    (new ErrorResponse($e->getMessage()))->send();
+} catch (Exception $e) {
+    $logger->error($e->getMessage(), ['exception' => $e]);
+    (new ErrorResponse)->send();
 }
 $response->send();

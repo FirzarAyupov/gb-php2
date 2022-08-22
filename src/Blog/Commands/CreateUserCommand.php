@@ -9,13 +9,15 @@ use GeekBrains\Blog\Repositories\Interfaces\UsersRepositoryInterface;
 use GeekBrains\Blog\User;
 use GeekBrains\Blog\UUID;
 use GeekBrains\Person\Name;
+use Psr\Log\LoggerInterface;
 
 class CreateUserCommand
 {
 // Команда зависит от контракта репозитория пользователей,
 // а не от конкретной реализации
     public function __construct(
-        private UsersRepositoryInterface $usersRepository
+        private UsersRepositoryInterface $usersRepository,
+        private LoggerInterface $logger
     )
     {
     }
@@ -26,20 +28,22 @@ class CreateUserCommand
      */
     public function handle(Arguments $arguments): void
     {
+        $this->logger->info("Create user command started");
+
         $username = $arguments->get('username');
 
-// Проверяем, существует ли пользователь в репозитории
         if ($this->userExists($username)) {
-// Бросаем исключение, если пользователь уже существует
-            throw new CommandException("User already exists: $username");
+            $this->logger->warning("User already exists: $username");
         }
 
-// Сохраняем пользователя в репозиторий
+        $uuid = UUID::random();
         $this->usersRepository->save(new User(
-            UUID::random(),
+            $uuid,
             $username,
             new Name($arguments->get('first_name'), $arguments->get('last_name'))
         ));
+
+        $this->logger->info("User created: $uuid");
     }
 
     private function userExists(string $username): bool
